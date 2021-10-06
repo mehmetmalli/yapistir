@@ -7,7 +7,9 @@
         v-model="store.content"
         :language="store.language"
         :theme="store.isDark ? 'vs-dark' : 'vs-light'"
+        v-if="showEditor"
       />
+      <ContentView v-else/>
     </v-main>
   </v-app>
 </template>
@@ -15,6 +17,7 @@
 <script>
 import Header from "./components/Header";
 import MonacoEditor from "vue-monaco";
+import ContentView from "./components/ContentView";
 
 import store from "./store";
 
@@ -23,12 +26,18 @@ export default {
   components: {
     Header,
     MonacoEditor,
+    ContentView
   },
   data: () => {
     return {
       store
     };
   },
+  computed: {
+    showEditor() {
+      return !window.location.search;
+    }
+  }
 };
 </script>
 
@@ -37,7 +46,6 @@ html,
 body {
   margin: 0;
   height: 100%;
-  overflow: hidden;
   scrollbar-width: none;
 }
 

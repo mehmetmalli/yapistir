@@ -21,18 +21,21 @@
       column
       @change="store.setLanguage(selection)"
       title="Syntax Highlighting"
+      v-if="showButtons"
     >
       <v-chip v-for="(lang, i) in store.languages" :key="i">{{
         lang.name
       }}</v-chip>
     </v-chip-group>
     <v-spacer></v-spacer>
-    <v-btn @click="store.toggleDark()" title="Toggle Dark/Light Mode" icon>
-      <v-icon>{{ `mdi-lightbulb${store.isDark ? "" : "-off"}` }}</v-icon>
-    </v-btn>
-    <v-btn @click="post(store.content)" title="Create Link" icon>
-      <v-icon>mdi-link</v-icon>
-    </v-btn>
+    <div v-if="showButtons">
+      <v-btn @click="store.toggleDark()" title="Toggle Dark/Light Mode" icon>
+        <v-icon>{{ `mdi-lightbulb${store.isDark ? "" : "-off"}` }}</v-icon>
+      </v-btn>
+      <v-btn @click="post(store.content)" title="Create Link" icon>
+        <v-icon>mdi-link</v-icon>
+      </v-btn>
+    </div>
   </v-app-bar>
 </template>
 
@@ -51,10 +54,15 @@ export default {
     post: async (data) => {
       const response = await fetch("http://localhost:3000/save", {
         method: "POST",
-        body: data
+        body: data,
       });
       const body = await response.json();
       console.log(body);
+    },
+  },
+  computed: {
+    showButtons() {
+      return !window.location.search;
     },
   },
 };
