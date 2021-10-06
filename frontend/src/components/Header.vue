@@ -61,18 +61,25 @@ export default {
       document.execCommand("copy");
       document.body.removeChild(el);
     },
-    
-    post: async function(content) {
-      const response = await fetch(`${process.env.NODE_ENV === 'production' ? '':'http://localhost:3000'}/save`, {
-        method: "POST",
-        body: JSON.stringify({
-          content,
-        }),
-      });
-      const { id } = await response.json();
-      console.log(window.location.href + "data?id=" + id);
-      this.copyStringToClipboard(window.location.href + "data?id=" + id);
-    }
+
+    post: async function (content) {
+      if (content && content.trim() !== "") {
+        const response = await fetch(
+          `${
+            process.env.NODE_ENV === "production" ? "" : "http://localhost:3000"
+          }/save`,
+          {
+            method: "POST",
+            body: JSON.stringify({
+              content,
+            }),
+          }
+        );
+        const { id } = await response.json();
+        console.log(window.location.href + "data?id=" + id);
+        this.copyStringToClipboard(window.location.href + "data?id=" + id);
+      }
+    },
   },
   computed: {
     showButtons() {
