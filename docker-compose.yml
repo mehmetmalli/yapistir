@@ -1,0 +1,27 @@
+version: '3'
+services:
+  db:
+    image: mongo
+    volumes:
+      - data-volume:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+    depends_on:
+      - db
+    networks:
+      - app-network
+networks:
+    app-network:
+        driver: bridge
+volumes:
+    data-volume:
