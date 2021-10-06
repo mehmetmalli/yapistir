@@ -3,7 +3,12 @@ const app = express();
 const cors = require('cors');
 
 const PORT = process.env.PORT || 3000;
-let content;
+
+const dataRouter = require('./routes/data.route');
+const saveRouter = require('./routes/save.route');
+
+//Database connection
+require('./utils/db.util')();
 
 //allow cors
 app.use(cors());
@@ -11,19 +16,10 @@ app.use(cors());
 //allow plaintext body
 app.use(express.text())
 
-app.post('/save', (req, res) => {
-    console.log(req.body);
-    content = req.body;
-    res.status(200).json({
-        message: "Success", 
-        content
-    })
-});
+app.use('/data', dataRouter);
 
-app.get('/data', (req, res) => {
-    res.status(200).json({content})
-});
+app.use('/save', saveRouter);
 
 app.listen(PORT, () => {
     console.log("Started listening on", PORT);
-})
+});

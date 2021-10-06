@@ -14,7 +14,7 @@ export default {
   },
   methods: {
     async getContent() {
-      const response = await fetch("http://localhost:3000/data");
+      const response = await fetch(`${process.env.NODE_ENV === 'production' ? '':'http://localhost:3000'}/data${window.location.search}`);
       const { content } = await response.json();
       this.content = content;
     },

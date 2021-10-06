@@ -51,14 +51,28 @@ export default {
     };
   },
   methods: {
-    post: async (data) => {
-      const response = await fetch("http://localhost:3000/save", {
-        method: "POST",
-        body: data,
-      });
-      const body = await response.json();
-      console.log(body);
+    copyStringToClipboard: (str) => {
+      var el = document.createElement("textarea");
+      el.value = str;
+      el.setAttribute("readonly", "");
+      el.style = { position: "absolute", left: "-9999px" };
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand("copy");
+      document.body.removeChild(el);
     },
+    
+    post: async function(content) {
+      const response = await fetch(`${process.env.NODE_ENV === 'production' ? '':'http://localhost:3000'}/save`, {
+        method: "POST",
+        body: JSON.stringify({
+          content,
+        }),
+      });
+      const { id } = await response.json();
+      console.log(window.location.href + "data?id=" + id);
+      this.copyStringToClipboard(window.location.href + "data?id=" + id);
+    }
   },
   computed: {
     showButtons() {
