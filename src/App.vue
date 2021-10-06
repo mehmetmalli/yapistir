@@ -26,8 +26,7 @@ export default {
   },
   data: () => {
     return {
-      store,
-      selection: 0,
+      store
     };
   },
 };
