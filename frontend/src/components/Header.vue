@@ -35,6 +35,16 @@
       <v-btn @click="post(store.content)" title="Create Link" icon>
         <v-icon>mdi-link</v-icon>
       </v-btn>
+
+      <v-snackbar v-model="snackbar" :timeout="2000" right>
+        {{ alert }}
+
+        <template v-slot:action="{ attrs }">
+          <v-btn color="blue" text v-bind="attrs" @click="snackbar = false">
+            Close
+          </v-btn>
+        </template>
+      </v-snackbar>
     </div>
   </v-app-bar>
 </template>
@@ -48,6 +58,8 @@ export default {
     return {
       store,
       selection: 0,
+      snackbar: false,
+      alert: ""
     };
   },
   methods: {
@@ -76,8 +88,15 @@ export default {
           }
         );
         const { id } = await response.json();
-        console.log(window.location.href + "data?id=" + id);
-        this.copyStringToClipboard(window.location.href + "data?id=" + id);
+        if (response.status === 200) {
+          this.copyStringToClipboard(window.location.href + "data?id=" + id);
+          this.alert = "Link oluşturulup panoya kopyalandı."
+          this.snackbar = true;
+        } else {
+          this.alert = "Link oluşturulurken bir hata oluştu."
+          this.snackbar = true;
+        }
+
       }
     },
   },
